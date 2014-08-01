@@ -57,49 +57,31 @@ function wfGlobalNotice( &$siteNotice ) {
 	// options array adds <p> tags around the message, EVEN IF THE MESSAGE IS
 	// EMPTY! This causes wfEmptyMsg() to think that the message has some
 	// content, when in fact it doesn't.
-	$forcedNotice = wfMsgExt(
-		'forced-globalnotice',
-		array( 'language' => 'en' )
-	);
-	if ( !wfEmptyMsg( 'forced-globalnotice', $forcedNotice ) ) {
+	$forcedNotice = wfMessage( 'forced-globalnotice' )->inLanguage( 'en' );
+	if ( !$forcedNotice->isDisabled() ) {
 		$ourSiteNotice .= '<div style="text-align: center;" id="forcedGlobalNotice">' .
-			wfMsgExt(
-				'forced-globalnotice',
-				array( 'parse', 'language' => 'en' )
-			) . '</div>';
+			$forcedNotice->parseAsBlock() . '</div>';
 	}
 
 	// Global notice, depending on the user's language
 	// This can be used to show language-specific stuff to users with a certain
 	// interface language (i.e. "We need more French translators! Pouvez-vous nous aider ?")
-	$globalNotice = wfMsgExt(
-		'globalnotice',
-		array( 'language' => $wgLang->getCode() )
-	);
-	if ( !wfEmptyMsg( 'globalnotice', $globalNotice ) ) {
+	$globalNotice = wfMessage( 'globalnotice' );
+	if ( !$globalNotice->isDisabled() ) {
 		// Give the global notice its own ID and center it
 		$ourSiteNotice .= '<div style="text-align: center;" id="globalNotice">' .
-			wfMsgExt(
-				'globalnotice',
-				array( 'parse', 'language' => $wgLang->getCode() )
-			) . '</div>';
+			$globalNotice->parseAsBlock() . '</div>';
 	}
 
 	// Group-specific global notices
 	foreach( array( 'sysop', 'bureaucrat', 'bot', 'rollback' ) as $group ) {
 		$messageName = 'globalnotice-' . $group;
-		$globalNoticeForGroup = wfMsgExt(
-			$messageName,
-			array( 'language' => $wgLang->getCode() )
-		);
+		$globalNoticeForGroup = wfMessage( $messageName );
 		$isMember = in_array( $group, $wgUser->getEffectiveGroups() );
-		if ( !wfEmptyMsg( $messageName, $globalNoticeForGroup ) && $isMember ) {
+		if ( !$globalNoticeForGroup->isDisabled() && $isMember ) {
 			// Give the global notice its own ID and center it
 			$ourSiteNotice .= '<div style="text-align: center;" id="globalNoticeForGroup">' .
-				wfMsgExt(
-					$messageName,
-					array( 'parse', 'language' => $wgLang->getCode() )
-				) . '</div>';
+				$globalNoticeForGroup->parseAsBlock() . '</div>';
 		}
 	}
 

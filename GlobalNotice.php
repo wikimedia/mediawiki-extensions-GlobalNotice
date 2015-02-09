@@ -24,6 +24,7 @@ $wgExtensionCredits['other'][] = array(
 	'author' => array( 'Misza', 'Jack Phoenix' ),
 	'description' => 'Global sitenotice for wiki farms',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:GlobalNotice',
+	'license-name' => 'GPL-2.0+',
 );
 
 $wgHooks['SiteNoticeAfter'][] = 'wfGlobalNotice';

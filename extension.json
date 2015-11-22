@@ -1,0 +1,21 @@
+{
+	"name": "GlobalNotice",
+	"version": "0.4",
+	"author": [
+		"Misza",
+		"Jack Phoenix"
+	],
+	"license-name": "GPL-2.0+",
+	"url": "https://www.mediawiki.org/wiki/Extension:GlobalNotice",
+	"description": "Global sitenotice for wiki farms",
+	"type": "other",
+	"AutoloadClasses": {
+		"GlobalNotice": "GlobalNotice.class.php"
+	},
+	"Hooks": {
+		"SiteNoticeAfter": [
+			"GlobalNotice::onSiteNoticeAfter"
+		]
+	},
+	"manifest_version": 1
+}

@@ -18,10 +18,14 @@ $wgExtensionCredits['other'][] = array(
 	'name' => 'GlobalNotice',
 	'version' => '0.4',
 	'author' => array( 'Misza', 'Jack Phoenix' ),
-	'description' => 'Global sitenotice for wiki farms',
+	'descriptionmsg' => 'globalnotice-desc',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:GlobalNotice',
 	'license-name' => 'GPL-2.0+',
 );
+
+$wgMessagesDirs['GlobalNotice'] = __DIR__ . '/i18n';
+
+$wgAutoloadClasses['GlobalNotice'] = __DIR__ . '/GlobalNotice.class.php';
 
 $wgHooks['SiteNoticeAfter'][] = 'GlobalNotice::onSiteNoticeAfter';
 //$wgHooks['EditPage::showEditForm:initial'][] = 'GlobalNotice::displayNoticeOnEditPage';

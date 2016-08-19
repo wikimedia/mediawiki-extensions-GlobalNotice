@@ -1,6 +1,4 @@
 {
-	"@metadata": {
-		"authors": []
-	},
+	"@metadata": [],
 	"globalnotice-desc": "{{desc|what=extension|name=GlobalNotice|url=https://www.mediawiki.org/wiki/Extension:GlobalNotice}}"
 }

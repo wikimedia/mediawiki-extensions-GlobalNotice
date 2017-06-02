@@ -1,6 +1,6 @@
 {
 	"name": "GlobalNotice",
-	"version": "0.5",
+	"version": "0.6.0",
 	"author": [
 		"Misza",
 		"Jack Phoenix"
@@ -18,9 +18,11 @@
 		"GlobalNotice": "GlobalNotice.class.php"
 	},
 	"Hooks": {
-		"SiteNoticeAfter": [
-			"GlobalNotice::onSiteNoticeAfter"
-		]
+		"SiteNoticeAfter": "GlobalNotice::onSiteNoticeAfter",
+		"EditPage::showEditForm:initial": "GlobalNotice::displayWarningOnEditPage"
+	},
+	"config": {
+		"GlobalNoticeDisplayWarningOnEditPage": false
 	},
 	"manifest_version": 1
 }

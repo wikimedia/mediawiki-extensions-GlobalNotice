@@ -78,33 +78,39 @@ class GlobalNotice {
 	}
 
 	/**
-	 * Show an annoying notice when editing MediaWiki:Forced-globalnotice because
+	 * Show an annoying warning when editing MediaWiki:Forced-globalnotice because
 	 * that message is Serious Business™.
-	 * Disabled for production, might be too annoying -- but I just wanted to code
-	 * this feature. :)
 	 *
-	 * Would be hooked into the 'EditPage::showEditForm:initial' hook.
+	 * Disabled for production by default (but can be configured),
+	 * might be too annoying -- but I just wanted to code this feature. :)
 	 *
 	 * @param EditPage $editPage Instance of EditPage class
 	 * @return bool
-	public static function displayNoticeOnEditPage( &$editPage ) {
+	 */
+	public static function displayWarningOnEditPage( &$editPage ) {
+		global $wgGlobalNoticeDisplayWarningOnEditPage;
+
+		if ( !$wgGlobalNoticeDisplayWarningOnEditPage ) {
+			return true;
+		}
+
 		// only initialize this when editing pages in MediaWiki namespace
 		if ( $editPage->mTitle->getNamespace() != 8 ) {
 			return true;
 		}
 
-		// Show an annoying notice when editing MediaWiki:Forced-globalnotice
+		// Show an annoying warning when editing MediaWiki:Forced-globalnotice
 		// I considered using confirm() JS but it doesn't allow CSS properties
 		// AFAIK and no CSS properties = less obtrusive notice = bad, so I ditched
 		// that idea.
 		if ( $editPage->mTitle->getDBkey() == 'Forced-globalnotice' ) {
 			$editPage->editFormPageTop .= '<span style="color: red;">Hey, hold it right there!</span><br />
-The value of this message is shown to <b>all users</b>, no matter what is their language. This can be <u>extremely</u> annoying.<br />
-<span style="text-transform: uppercase; font-size: 20px;">Only use this for really important things, like server maintenance notices!</span><br />
-Understood?
-<br /><br />
+	The value of this message is shown to <strong>all users</strong>, no matter what is their language. This can be <strong>extremely</strong> annoying.<br />
+	<span style="text-transform: uppercase; font-size: 20px;">Only use this for really important things, like server maintenance notices!</span><br />
+	Understood?
+	<br /><br />
 
-<a href="#" onclick="document.getElementById( \'wpTextbox1\' ).style.display = \'block\'; return false;">Yes!</a>';
+	<a href="#" onclick="document.getElementById( \'wpTextbox1\' ).style.display = \'block\'; return false;">Yes!</a>';
 			// JavaScript must be injected here, wpTextbox1 doesn't exist before...
 			$editPage->editFormTextAfterWarn .= '<script type="text/javascript">
 				document.getElementById( \'wpTextbox1\' ).style.display = \'none\';
@@ -113,6 +119,5 @@ Understood?
 
 		return true;
 	}
-	*/
 
 }

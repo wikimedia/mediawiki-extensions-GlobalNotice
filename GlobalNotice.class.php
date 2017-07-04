@@ -7,7 +7,7 @@
  * @author Misza <misza@shoutwiki.com>
  * @author Jack Phoenix <jack@shoutwiki.com>
  * @copyright Copyright © 2010 Misza
- * @copyright Copyright © 2010-2015 Jack Phoenix
+ * @copyright Copyright © 2010-2017 Jack Phoenix
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
  * @link https://www.mediawiki.org/wiki/Extension:GlobalNotice Documentation
  */
@@ -16,11 +16,10 @@ class GlobalNotice {
 	/**
 	 * @param string $siteNotice Existing site notice (if any) to manipulate or
 	 * append to
+	 * @param Skin $skin
 	 * @return bool
 	 */
-	public static function onSiteNoticeAfter( &$siteNotice ) {
-		global $wgUser;
-
+	public static function onSiteNoticeAfter( &$siteNotice, $skin ) {
 		// It is possible that there is a global notice (for example, for all
 		// French-speaking users) *and* a forced global notice (for everyone,
 		// informing them of planned server maintenance etc.)
@@ -39,7 +38,7 @@ class GlobalNotice {
 		// "Forced" globalnotice -- a site-wide notice shown for *all* users,
 		// no matter what their language is
 		// Used only for things like server migration notices etc.
-		$forcedNotice = wfMessage( 'forced-globalnotice' )->inLanguage( 'en' );
+		$forcedNotice = $skin->msg( 'forced-globalnotice' )->inLanguage( 'en' );
 		if ( !$forcedNotice->isDisabled() ) {
 			$ourSiteNotice .= '<div style="text-align: center;" id="forcedGlobalNotice">' .
 			$forcedNotice->parseAsBlock() . '</div>';
@@ -48,18 +47,19 @@ class GlobalNotice {
 		// Global notice, depending on the user's language
 		// This can be used to show language-specific stuff to users with a certain
 		// interface language (i.e. "We need more French translators! Pouvez-vous nous aider ?")
-		$globalNotice = wfMessage( 'globalnotice' );
+		$globalNotice = $skin->msg( 'globalnotice' );
 		if ( !$globalNotice->isDisabled() ) {
 			// Give the global notice its own ID and center it
 			$ourSiteNotice .= '<div style="text-align: center;" id="globalNotice">' .
 				$globalNotice->parseAsBlock() . '</div>';
 		}
 
+		$user = $skin->getUser();
 		// Group-specific global notices
 		foreach ( array( 'sysop', 'bureaucrat', 'bot', 'rollback' ) as $group ) {
 			$messageName = 'globalnotice-' . $group;
-			$globalNoticeForGroup = wfMessage( $messageName );
-			$isMember = in_array( $group, $wgUser->getEffectiveGroups() );
+			$globalNoticeForGroup = $skin->msg( $messageName );
+			$isMember = in_array( $group, $user->getEffectiveGroups() );
 			if ( !$globalNoticeForGroup->isDisabled() && $isMember ) {
 				// Give the global notice its own ID and center it
 				$ourSiteNotice .= '<div style="text-align: center;" id="globalNoticeForGroup">' .

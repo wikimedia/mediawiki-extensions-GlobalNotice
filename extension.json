@@ -1,6 +1,6 @@
 {
 	"name": "GlobalNotice",
-	"version": "0.7.0",
+	"version": "0.8.0",
 	"author": [
 		"Misza",
 		"Jack Phoenix"
@@ -22,7 +22,18 @@
 		"EditPage::showEditForm:initial": "GlobalNotice::displayWarningOnEditPage"
 	},
 	"config": {
-		"GlobalNoticeDisplayWarningOnEditPage": false
+		"GlobalNoticeDisplayWarningOnEditPage": {
+			"value": false,
+			"path": false,
+			"description": "Show a big, red warning when editing [[MediaWiki:Forced-globalnotice]] and force user to read it and click a link to indicate that they've read the warning before they're allowed to edit the page?",
+			"public": false
+		},
+		"GlobalNoticeFile": {
+			"value": false,
+			"path": false,
+			"description": "Location of a file system file from which to read a global notice shown to all users. Wikitext parsing is supported. Only use this if MessageCommons is disabled and you can't serve GlobalNotice content from the MessageCommons wiki on the wiki farm.",
+			"public": false
+		}
 	},
-	"manifest_version": 1
+	"manifest_version": 2
 }

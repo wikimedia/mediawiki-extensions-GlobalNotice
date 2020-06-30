@@ -7,7 +7,7 @@
  * @author Misza <misza@shoutwiki.com>
  * @author Jack Phoenix <jack@shoutwiki.com>
  * @copyright Copyright © 2010 Misza
- * @copyright Copyright © 2010-2017 Jack Phoenix
+ * @copyright Copyright © 2010-2020 Jack Phoenix
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
  * @link https://www.mediawiki.org/wiki/Extension:GlobalNotice Documentation
  */
@@ -20,6 +20,7 @@ class GlobalNotice {
 	 * @return bool
 	 */
 	public static function onSiteNoticeAfter( &$siteNotice, $skin ) {
+		global $wgGlobalNoticeFile;
 		// It is possible that there is a global notice (for example, for all
 		// French-speaking users) *and* a forced global notice (for everyone,
 		// informing them of planned server maintenance etc.)
@@ -35,13 +36,25 @@ class GlobalNotice {
 		// in 2014 or so
 		$ourSiteNotice = '';
 
+		// GlobalNotice from a file system file; for the rare cases when MessageCommons ext.
+		// has been disabled but we still want to display a global notice; like during a major
+		// MediaWiki upgrade, for example
+		if ( $wgGlobalNoticeFile !== false && file_exists( $wgGlobalNoticeFile ) ) {
+			$siteNotice .= '<div style="text-align: center;" id="forcedGlobalNotice">';
+			$siteNotice .= $skin->getOutput()->parseInlineAsInterface( file_get_contents( $wgGlobalNoticeFile ) );
+			$siteNotice .= '</div>';
+			// This is a special case, perform no further processing because we don't
+			// care about the rest if $wgGlobalNoticeFile is set.
+			return true;
+		}
+
 		// "Forced" globalnotice -- a site-wide notice shown for *all* users,
 		// no matter what their language is
 		// Used only for things like server migration notices etc.
 		$forcedNotice = $skin->msg( 'forced-globalnotice' )->inLanguage( 'en' );
 		if ( !$forcedNotice->isDisabled() ) {
 			$ourSiteNotice .= '<div style="text-align: center;" id="forcedGlobalNotice">' .
-			$forcedNotice->parseAsBlock() . '</div>';
+				$forcedNotice->parseAsBlock() . '</div>';
 		}
 
 		// Global notice, depending on the user's language
@@ -56,7 +69,7 @@ class GlobalNotice {
 
 		$user = $skin->getUser();
 		// Group-specific global notices
-		foreach ( array( 'sysop', 'bureaucrat', 'bot', 'rollback' ) as $group ) {
+		foreach ( [ 'sysop', 'bureaucrat', 'bot', 'rollback' ] as $group ) {
 			$messageName = 'globalnotice-' . $group;
 			$globalNoticeForGroup = $skin->msg( $messageName );
 			$isMember = in_array( $group, $user->getEffectiveGroups() );

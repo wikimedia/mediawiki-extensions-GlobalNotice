@@ -18,7 +18,7 @@
 		]
 	},
 	"AutoloadClasses": {
-		"GlobalNotice": "GlobalNotice.class.php"
+		"GlobalNotice": "src/GlobalNotice.php"
 	},
 	"Hooks": {
 		"SiteNoticeAfter": "GlobalNotice::onSiteNoticeAfter",

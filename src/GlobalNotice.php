@@ -8,13 +8,13 @@
  * @author Jack Phoenix <jack@shoutwiki.com>
  * @copyright Copyright © 2010 Misza
  * @copyright Copyright © 2010-2020 Jack Phoenix
- * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License 2.0 or later
+ * @license GPL-2.0-or-later
  * @link https://www.mediawiki.org/wiki/Extension:GlobalNotice Documentation
  */
 
 class GlobalNotice {
 	/**
-	 * @param string $siteNotice Existing site notice (if any) to manipulate or
+	 * @param string &$siteNotice Existing site notice (if any) to manipulate or
 	 * append to
 	 * @param Skin $skin
 	 * @return bool
@@ -97,7 +97,7 @@ class GlobalNotice {
 	 * Disabled for production by default (but can be configured),
 	 * might be too annoying -- but I just wanted to code this feature. :)
 	 *
-	 * @param EditPage $editPage Instance of EditPage class
+	 * @param EditPage &$editPage Instance of EditPage class
 	 * @return bool
 	 */
 	public static function displayWarningOnEditPage( &$editPage ) {

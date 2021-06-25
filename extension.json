@@ -10,7 +10,7 @@
 	"descriptionmsg": "globalnotice-desc",
 	"type": "other",
 	"requires": {
-		"MediaWiki": ">= 1.32.0"
+		"MediaWiki": ">= 1.35.0"
 	},
 	"MessagesDirs": {
 		"GlobalNotice": [
@@ -20,8 +20,16 @@
 	"AutoloadClasses": {
 		"GlobalNotice": "src/GlobalNotice.php"
 	},
+	"HookHandlers": {
+		"default": {
+			"class": "GlobalNotice",
+			"services": [
+				"UserGroupManager"
+			]
+		}
+	},
 	"Hooks": {
-		"SiteNoticeAfter": "GlobalNotice::onSiteNoticeAfter",
+		"SiteNoticeAfter": "default",
 		"EditPage::showEditForm:initial": "GlobalNotice::displayWarningOnEditPage"
 	},
 	"config": {

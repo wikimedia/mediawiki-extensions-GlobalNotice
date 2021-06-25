@@ -1,4 +1,8 @@
 <?php
+
+use MediaWiki\Hook\SiteNoticeAfterHook;
+use MediaWiki\User\UserGroupManager;
+
 /**
  * GlobalNotice -- global (undismissable) sitenotice for wiki farms
  *
@@ -12,14 +16,27 @@
  * @link https://www.mediawiki.org/wiki/Extension:GlobalNotice Documentation
  */
 
-class GlobalNotice {
+class GlobalNotice implements SiteNoticeAfterHook {
+
+	/**
+	 * @var UserGroupManager
+	 */
+	private $userGroupManager;
+
+	/**
+	 * @param UserGroupManager $userGroupManager
+	 */
+	public function __construct( UserGroupManager $userGroupManager ) {
+		$this->userGroupManager = $userGroupManager;
+	}
+
 	/**
 	 * @param string &$siteNotice Existing site notice (if any) to manipulate or
 	 * append to
 	 * @param Skin $skin
 	 * @return bool
 	 */
-	public static function onSiteNoticeAfter( &$siteNotice, $skin ) {
+	public function onSiteNoticeAfter( &$siteNotice, $skin ) {
 		global $wgGlobalNoticeFile;
 		// It is possible that there is a global notice (for example, for all
 		// French-speaking users) *and* a forced global notice (for everyone,
@@ -72,7 +89,7 @@ class GlobalNotice {
 		foreach ( [ 'sysop', 'bureaucrat', 'bot', 'rollback' ] as $group ) {
 			$messageName = 'globalnotice-' . $group;
 			$globalNoticeForGroup = $skin->msg( $messageName );
-			$isMember = in_array( $group, $user->getEffectiveGroups() );
+			$isMember = in_array( $group, $this->userGroupManager->getUserEffectiveGroups( $user ) );
 			if ( !$globalNoticeForGroup->isDisabled() && $isMember ) {
 				// Give the global notice its own ID and center it
 				$ourSiteNotice .= '<div style="text-align: center;" id="globalNoticeForGroup">' .
